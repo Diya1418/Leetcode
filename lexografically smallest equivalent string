@@ -1,0 +1,44 @@
+class Solution {
+public:
+
+    array<int,26> alpha;     //creating an array for all 26 alphabets
+
+    int findparent(int a){   //find parent function along with path compression
+        if(alpha[a]==a){
+            return a;
+        }
+
+        return alpha[a]=findparent(alpha[a]);    //path compression
+    }
+
+    void unionfind(int a,int b){         //unionfind function
+        a=findparent(a);
+        b=findparent(b);
+
+           if(a==b)return;
+            if(a<b){
+               alpha[b]=a;
+               
+            }
+            else{
+               alpha[a]=b;
+              
+            }
+
+    }
+
+    string smallestEquivalentString(string s1, string s2, string baseStr) {
+        
+        for(int i=0;i<26;i++){        //updating alpha vector with index to the corresponding alphabets
+            alpha[i]=i;
+        }
+        for(int i=0;i<s1.size();i++)
+        unionfind(s1[i]-'a',s2[i]-'a');    //calling union find function to get the mapping of each alphabet with the lexographically smallest alphabet
+
+        string ans;
+
+        for(auto c:baseStr){
+              ans+=(char)(findparent(c-'a')+'a');    // using the stored mapping
+        }
+        return ans;
+    }
